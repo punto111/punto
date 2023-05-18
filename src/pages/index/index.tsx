@@ -5,7 +5,7 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, Input, Button, Modal, Table, Space, Select, Form, message,InputNumber } from 'antd';
 import './index.less'
 import type { ColumnsType } from 'antd/es/table';
-import { Link } from 'react-router-dom';
+import { Link } from 'umi';
 
 
 const { Header, Content, Sider } = Layout;
@@ -172,7 +172,7 @@ const IndexPage: React.FC = () => {
 
   const phoneChange = (value: React.ChangeEvent<HTMLInputElement>) => {
 
-    setId(value.target.value.replace(/^1(3|4|5|6|7|8|9)\d{9}$/, "g"))
+    setId(value.target.value.replace('^1[3-9]\d{9}$', "g"))
 
   }
 
@@ -215,7 +215,7 @@ const IndexPage: React.FC = () => {
           <Menu
             mode="inline"
             defaultSelectedKeys={['2']}
-            defaultOpenKeys={['sub1']}
+            defaultOpenKeys={['1']}
             style={{ height: '100%', borderRight: 0 }}
             items={items2}
           />
@@ -255,9 +255,6 @@ const IndexPage: React.FC = () => {
                       ]}
                     />
                   </div>
-                </Modal>
-                <Modal title="提示" open={showModalOpen} onOk={handleOkSplice} onCancel={handleCancel1}>
-                  <p >是否要删除学员</p>
                 </Modal>
                 <Modal title="编辑学员信息" open={isEditModalOpen} onOk={editModalOnOK} onCancel={editModalCanel}>
                   <div>
