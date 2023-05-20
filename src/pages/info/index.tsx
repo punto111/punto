@@ -156,9 +156,9 @@ const InfoPage: React.FC = () => {
     setIsModalOpen(false);
     setName('')
   };
-  const nameChange = (value: React.ChangeEvent<HTMLInputElement>) => {
+  const nameChange = (e: { target: { value: any; }; }) => {
     //setName(value.target.value.replace(/(^\s*)|(\s*$)/g, ''))
-    setName(value.target.value.replace(/(^\s*)|(\s*$)/g, ''))
+    setInfo({ ...info, name: e.target.value })
     // setInfo({...info, name: value})
   }
   const nameChange2 = (e: { target: { value: any; }; }) => {
@@ -184,8 +184,8 @@ const InfoPage: React.FC = () => {
   };
 
   const handleChange = (value: string) => {
-    setGrade(value)
-    setInfo(info.classname)
+    // setGrade(value)
+    setInfo({...info,classname:value})
     console.log(`selected ${value}`);
   };
 
@@ -202,9 +202,11 @@ const InfoPage: React.FC = () => {
     setInfo(infos)
     setisEditModalOpen(true);
     const { key } = info;
+    const newList = [...selectList]
     const newContent = selectList.findIndex((_) => _.key === key)
     console.log('newContent=',newContent,'info=',info)
     if(newContent>=0){
+      newList[newContent] = info;
       setSelectList([...selectList])
     }
   };
@@ -213,10 +215,26 @@ const InfoPage: React.FC = () => {
 
 
   const editModalOnOK = () => {
+    setIsModalOpen(false);
+    const { key } = info;
+    const newList = [...selectList];
+    const newContent = newList.findIndex((_) => _.key === key)
+    console.log('newContent=',newContent,'info=',info)
+    if(newContent>=0){
+      newList[newContent] = info;
+      setSelectList(newList)
+    } }
+    // const { key } = info;
+    // const newContent = selectList.findIndex((_) => _.key === key)
+    // console.log('newContent=',newContent,'info=',info)
+    // if(newContent>=0){
+    //   selectList[newContent] = info
+    //   setSelectList(selectList)
+    // }
     setisEditModalOpen(false)
-    setId('')
-    setName('')
-  }
+    // setId('')
+    // setName('')
+ 
   const editModalCanel = () => {
     setisEditModalOpen(false)
   }
@@ -235,21 +253,21 @@ const InfoPage: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ backgroundColor: 'white', height: 50 }}>
+    <Layout  className='layout-all'>
+      <Header className='layout-header'>
       </Header>
       <Layout>
-        <Sider width={200} >
+        <Sider className='layout-sider' >
           <Menu
             mode="inline"
             defaultSelectedKeys={['3']}
             defaultOpenKeys={['1']}
-            style={{ height: '100%', borderRight: 0 }}
+            className='menu-sider'
             items={items2}
           />
         </Sider>
         <Layout>
-          <Content style={{ padding: 24, margin: 0, minHeight: 280, }}>
+          <Content className='layout-concent'>
             <div className='btn-top'>
               <div>考试名称：</div>
               <div><Input placeholder="考试名称" className='input-top' value={name} /></div>
@@ -257,7 +275,7 @@ const InfoPage: React.FC = () => {
               <div>
                 <Select
                   // value={info.classname}
-                  style={{ width: 150, }}
+                  className='select-top'
                   onChange={handleLessoChange}
                   options={[
                     { value: '语文', label: '语文' },
@@ -270,28 +288,30 @@ const InfoPage: React.FC = () => {
                   ]}
                 />
               </div>
-              <div><Button type='primary' style={{ marginLeft: 24 }}>搜索</Button></div>
-              <div><Button onClick={showModal} style={{ marginLeft: 24 }}>成绩录入</Button></div>
+              <div><Button type='primary' className='btn-Search'>搜索</Button></div>
+              <div><Button onClick={showModal} className='btn-Search'>成绩录入</Button></div>
             </div>
-            <div style={{ marginTop: 24, }}>
+            <div className='concent-modal'>
               <div>
 
 
                 {/* 新增考试信息 */}
-                <Modal title='新增考试信息' open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={600} >
+                <Modal title={info.key?'新增考试信息':'修改考试信息'} open={isModalOpen} onOk={editModalOnOK} onCancel={handleCancel}  className='modal-all' >
+                  
                   <div>
-                    <p>考试名称<span style={{ color: 'red' }}>*</span></p>
-                    <Input placeholder="请输入考试名称" value={name} onChange={nameChange} style={{ width: 400 }} showCount maxLength={20} />
+                    <p>考试名称<span className='span-color'>*</span></p>
+                    <Input placeholder="请输入考试名称" value={info.name} onChange={nameChange} className='input-len' showCount maxLength={20} />
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 14 }}>
-                    <p>考试时间<span style={{ color: 'red' }}>*</span></p>
-                    <DatePicker style={{ width: 200 }} format={dateFormat} onChange={timeChange} onOk={onOk}
+                  <div className='modal-input'>
+                    <p>考试时间<span className='span-color'>*</span></p>
+                    <DatePicker className='input-len' format={dateFormat} onChange={timeChange} onOk={onOk} defaultValue={dayjs(`${info.time}`)}
                     />
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 14 }}>
-                    <p>考试科目<span style={{ color: 'red' }}>*</span></p>
+                  <div className='modal-input'>
+                    <p>考试科目<span className='span-color'>*</span></p>
                     <Select
-                      style={{ width: 200 }}
+                      className='select-senter'
+                      value={info.classname}
                       onChange={handleChange}
                       options={[
                         { value: '语文', label: '语文' },
@@ -304,7 +324,7 @@ const InfoPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <p>成绩录入<span style={{ color: 'red' }}>*</span></p>
+                    <p>成绩录入<span className='span-color'>*</span></p>
                     <TextArea
                       style={{ height: 120, resize: 'none' }}
                       onChange={gradesChange}
@@ -320,11 +340,11 @@ const InfoPage: React.FC = () => {
 
                 <Modal title="修改考试信息" open={isEditModalOpen} onOk={editModalOnOK} onCancel={editModalCanel}>
                   <div>
-                    <p>考试名称<span style={{ color: 'red' }}>*</span></p>
+                    <p>考试名称<span className='span-color'>*</span></p>
                     <Input placeholder="请输入姓名" value={info.name} onChange={nameChange2} style={{ width: 400 }} showCount maxLength={20} />
                   </div>
                   <div style={{ marginTop: 14, fontSize: 14 }}>
-                    <p>考试时间<span style={{ color: 'red' }}>*</span></p>
+                    <p>考试时间<span className='span-color'>*</span></p>
                     <DatePicker style={{ width: 200 }} format={dateFormat} onChange={timeChange} onOk={onOk} defaultValue={dayjs(`${info.time}`)} />
                   </div>
                   <div style={{ marginTop: 14, fontSize: 14 }}>
@@ -342,7 +362,7 @@ const InfoPage: React.FC = () => {
                         { value: '物理', label: '物理' },
                       ]}
                     />
-                  </div>
+                  </div>  
                 </Modal>
               </div>
               <div>

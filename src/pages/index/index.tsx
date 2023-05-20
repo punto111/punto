@@ -159,6 +159,7 @@ const IndexPage: React.FC = () => {
     })
 
   }
+  
   const handleOk = () => {
     onAddItemByIndex(name, id)
     setIsModalOpen(false);

@@ -110,7 +110,8 @@ const UserPage: React.FC = () => {
       <Layout>
         <Layout>
           <Content className='concent-card'>
-            <div>      <Link to="./info">
+            <div>
+              <Link to="./info">
               <Button className="e-button" type="link">返回</Button>
             </Link></div>
             <div>
