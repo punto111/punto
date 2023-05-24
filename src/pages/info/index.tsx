@@ -184,7 +184,7 @@ const InfoPage: React.FC = () => {
   };
 
   const handleChange = (value: string) => {
-    // setGrade(value)
+    setGrade(value)
     setInfo({...info,classname:value})
     console.log(`selected ${value}`);
   };
@@ -195,45 +195,33 @@ const InfoPage: React.FC = () => {
     key: '',
     name: '',
     time: '',
-    classname: '',
+    classname: '0',
   }
   const [info, setInfo] = useState<any>(defaultParams);
-  const showEditModal = (infos: any) => {
-    setInfo(infos)
-    setisEditModalOpen(true);
-    const { key } = info;
-    const newList = [...selectList]
-    const newContent = selectList.findIndex((_) => _.key === key)
-    console.log('newContent=',newContent,'info=',info)
-    if(newContent>=0){
-      newList[newContent] = info;
-      setSelectList([...selectList])
-    }
-  };
+  
 
-
-
-
-  const editModalOnOK = () => {
-    setIsModalOpen(false);
-    const { key } = info;
+  const onAddChange =()=>{
+    setisEditModalOpen(true)
+    setInfo(defaultParams)
+  }
+  const editModalOk =()=>{
+    const {key}=info;
     const newList = [...selectList];
-    const newContent = newList.findIndex((_) => _.key === key)
-    console.log('newContent=',newContent,'info=',info)
+    const newContent =selectList.findIndex((_)=>_.key === key);
     if(newContent>=0){
-      newList[newContent] = info;
-      setSelectList(newList)
-    } }
-    // const { key } = info;
-    // const newContent = selectList.findIndex((_) => _.key === key)
-    // console.log('newContent=',newContent,'info=',info)
-    // if(newContent>=0){
-    //   selectList[newContent] = info
-    //   setSelectList(selectList)
-    // }
-    setisEditModalOpen(false)
-    // setId('')
-    // setName('')
+      newList[newContent]=info;
+    } else{
+      newList.push({...info, key:selectList.length + 1})
+    }
+     setSelectList(newList);
+     setInfo({...defaultParams})
+     setisEditModalOpen(false)
+  }
+  const showEditModal =(info:any)=>{
+    setisEditModalOpen(true)
+    setInfo(info)
+   
+  }
  
   const editModalCanel = () => {
     setisEditModalOpen(false)
@@ -289,56 +277,14 @@ const InfoPage: React.FC = () => {
                 />
               </div>
               <div><Button type='primary' className='btn-Search'>搜索</Button></div>
-              <div><Button onClick={showModal} className='btn-Search'>成绩录入</Button></div>
+              <div><Button onClick={onAddChange} className='btn-Search'>成绩录入</Button></div>
             </div>
             <div className='concent-modal'>
               <div>
-
-
-                {/* 新增考试信息 */}
-                <Modal title={info.key?'新增考试信息':'修改考试信息'} open={isModalOpen} onOk={editModalOnOK} onCancel={handleCancel}  className='modal-all' >
-                  
-                  <div>
-                    <p>考试名称<span className='span-color'>*</span></p>
-                    <Input placeholder="请输入考试名称" value={info.name} onChange={nameChange} className='input-len' showCount maxLength={20} />
-                  </div>
-                  <div className='modal-input'>
-                    <p>考试时间<span className='span-color'>*</span></p>
-                    <DatePicker className='input-len' format={dateFormat} onChange={timeChange} onOk={onOk} defaultValue={dayjs(`${info.time}`)}
-                    />
-                  </div>
-                  <div className='modal-input'>
-                    <p>考试科目<span className='span-color'>*</span></p>
-                    <Select
-                      className='select-senter'
-                      value={info.classname}
-                      onChange={handleChange}
-                      options={[
-                        { value: '语文', label: '语文' },
-                        { value: '数学', label: '数学' },
-                        { value: '英语', label: '英语' },
-                        { value: '生物', label: '生物' },
-                        { value: '化学', label: '化学' },
-                        { value: '物理', label: '物理' },
-                      ]}
-                    />
-                  </div>
-                  <div>
-                    <p>成绩录入<span className='span-color'>*</span></p>
-                    <TextArea
-                      style={{ height: 120, resize: 'none' }}
-                      onChange={gradesChange}
-                      placeholder="请输入内容"
-                    />
-                  </div>
-                </Modal>
                 <Modal title="提示" open={showModalOpen} onOk={handleOkSplice} onCancel={handleCancel1}>
                   <p >是否要删除学员</p>
                 </Modal>
-
-                {/* 修改考试信息 */}
-
-                <Modal title="修改考试信息" open={isEditModalOpen} onOk={editModalOnOK} onCancel={editModalCanel}>
+                <Modal title={info.key?"修改考试信息":"新增考试信息"} open={isEditModalOpen} onCancel={editModalCanel} onOk={editModalOk}>
                   <div>
                     <p>考试名称<span className='span-color'>*</span></p>
                     <Input placeholder="请输入姓名" value={info.name} onChange={nameChange2} style={{ width: 400 }} showCount maxLength={20} />
@@ -354,12 +300,12 @@ const InfoPage: React.FC = () => {
                       style={{ width: 200 }}
                       onChange={handleChange}
                       options={[
-                        { value: '语文', label: '语文' },
-                        { value: '数学', label: '数学' },
-                        { value: '英语', label: '英语' },
-                        { value: '生物', label: '生物' },
-                        { value: '化学', label: '化学' },
-                        { value: '物理', label: '物理' },
+                        { value: '0', label: '语文' },
+                        { value: '1', label: '数学' },
+                        { value: '2', label: '英语' },
+                        { value: '3', label: '生物' },
+                        { value: '4', label: '化学' },
+                        { value: '5', label: '物理' },
                       ]}
                     />
                   </div>  
